@@ -39,14 +39,14 @@ class Row {
 
 function main(workbook: ExcelScript.Workbook) {
 	const selectedSheet = workbook.getActiveWorksheet();
-	// selectedSheet.getRange("A:D").delete(ExcelScript.DeleteShiftDirection.left);
-	// selectedSheet.getRange("B:C").delete(ExcelScript.DeleteShiftDirection.left);
-	// selectedSheet.getRange("D:H").delete(ExcelScript.DeleteShiftDirection.left);
-	// selectedSheet.getRange("I:J").delete(ExcelScript.DeleteShiftDirection.left);
-	// selectedSheet.getRange("J:K").delete(ExcelScript.DeleteShiftDirection.left);
+	selectedSheet.getRange("A:D").delete(ExcelScript.DeleteShiftDirection.left);
+	selectedSheet.getRange("B:C").delete(ExcelScript.DeleteShiftDirection.left);
+	selectedSheet.getRange("D:H").delete(ExcelScript.DeleteShiftDirection.left);
+	selectedSheet.getRange("I:J").delete(ExcelScript.DeleteShiftDirection.left);
+	selectedSheet.getRange("J:K").delete(ExcelScript.DeleteShiftDirection.left);
 
 	const reportData = selectedSheet.getUsedRange().getValues();
-	const header = reportData.shift();
+	reportData.shift();
 	const data = reportData.map((row, index) => {
 		return new Row(row);
 	});
@@ -67,14 +67,12 @@ function main(workbook: ExcelScript.Workbook) {
 
 function addSheet(workbook: ExcelScript.Workbook, sheetName: string, data: Row[]) {
 	const sheet = workbook.addWorksheet(sheetName);
-	const totalRow = data.length + 2;
 	sheet.getRange("A1:F1").setValues([["Auth Amount", "Settlement Amount", "Cardholder Surcharge", "Total", "Invoice Number", "User"]]);
 	data.forEach((d, i) => {
 		const row = i + 2;
 		const invoice = d.invoice.length > 6 ? d.invoice.slice(-6) : d.invoice;
 		sheet.getRange(`A${row}:F${row}`).setValues([[d.amount.auth, d.amount.sett, d.amount.fee, d.amount.total, invoice, d.user]]);
 	});
-
 	const range = sheet.getUsedRange();
 	const table = sheet.addTable(range, true);
 	const tableLen = table.getRowCount() + 1;
