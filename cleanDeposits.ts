@@ -37,14 +37,18 @@ class Row {
 
 function main(workbook: ExcelScript.Workbook) {
 	const selectedSheet = workbook.getActiveWorksheet();
-	selectedSheet.getRange("A:D").delete(ExcelScript.DeleteShiftDirection.left);
-	selectedSheet.getRange("B:C").delete(ExcelScript.DeleteShiftDirection.left);
-	selectedSheet.getRange("D:H").delete(ExcelScript.DeleteShiftDirection.left);
-	selectedSheet.getRange("I:J").delete(ExcelScript.DeleteShiftDirection.left);
-	selectedSheet.getRange("J:K").delete(ExcelScript.DeleteShiftDirection.left);
-
 	const reportData = selectedSheet.getUsedRange().getValues();
-	const header = reportData.shift();
+	let header = reportData.shift().filter(cell => cell !== "");
+	
+	if(header.length > 9) {
+		selectedSheet.getRange("A:D").delete(ExcelScript.DeleteShiftDirection.left);
+		selectedSheet.getRange("B:C").delete(ExcelScript.DeleteShiftDirection.left);
+		selectedSheet.getRange("D:H").delete(ExcelScript.DeleteShiftDirection.left);
+		selectedSheet.getRange("I:J").delete(ExcelScript.DeleteShiftDirection.left);
+		selectedSheet.getRange("J:K").delete(ExcelScript.DeleteShiftDirection.left);
+		header = reportData.shift().filter(cell => cell !== "");
+	}
+	
 	const data = reportData.map((row, index) => {
 		return new Row(row);
 	});
