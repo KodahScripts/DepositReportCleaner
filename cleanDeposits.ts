@@ -24,16 +24,14 @@ class Row {
 		this.user = String(row[8]);
 	}
 
-	getAmount(cellValue: string) {
-		if(cellValue === "") return 0;
+	getAmount(cellValue: string): number {
+	    if (cellValue === "") return 0;
+	    if (!cellValue.includes("$")) return 0;
+	    
+	    const amt = cellValue.split("$")[1];
+	    if (!amt || amt.length === 0) return 0;
 
-		let amt = cellValue.split("$")[1];
-		if (amt.length === 0) return 0;
-
-		if (amt.includes(',')) {
-			return Number(amt.replace(',', ''));
-		}
-		return Number(amt);
+	    return Number(amt.replace(/,/g, ""));
 	}
 }
 
