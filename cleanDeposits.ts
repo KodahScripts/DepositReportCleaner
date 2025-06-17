@@ -46,7 +46,7 @@ function main(workbook: ExcelScript.Workbook) {
 	selectedSheet.getRange("J:K").delete(ExcelScript.DeleteShiftDirection.left);
 
 	const reportData = selectedSheet.getUsedRange().getValues();
-	reportData.shift();
+	const header = reportData.shift();
 	const data = reportData.map((row, index) => {
 		return new Row(row);
 	});
@@ -67,12 +67,14 @@ function main(workbook: ExcelScript.Workbook) {
 
 function addSheet(workbook: ExcelScript.Workbook, sheetName: string, data: Row[]) {
 	const sheet = workbook.addWorksheet(sheetName);
+	const totalRow = data.length + 2;
 	sheet.getRange("A1:F1").setValues([["Auth Amount", "Settlement Amount", "Cardholder Surcharge", "Total", "Invoice Number", "User"]]);
 	data.forEach((d, i) => {
 		const row = i + 2;
 		const invoice = d.invoice.length > 6 ? d.invoice.slice(-6) : d.invoice;
 		sheet.getRange(`A${row}:F${row}`).setValues([[d.amount.auth, d.amount.sett, d.amount.fee, d.amount.total, invoice, d.user]]);
 	});
+
 	const range = sheet.getUsedRange();
 	const table = sheet.addTable(range, true);
 	const tableLen = table.getRowCount() + 1;
@@ -82,5 +84,5 @@ function addSheet(workbook: ExcelScript.Workbook, sheetName: string, data: Row[]
 		`=SUM(C2:C${tableLen})`,
 		'','',''
 	]);
-	sheet.getRange("1:1").getFormat().autofitColumns();
+	table.getHeaderRowRange().getFormat().autofitColumns();
 }
