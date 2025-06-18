@@ -71,7 +71,7 @@ function addSheet(workbook: ExcelScript.Workbook, sheetName: string, data: Row[]
   sheet.getRange("A1:F1").setValues([["Auth Amount", "Settlement Amount", "Cardholder Surcharge", "Total", "Invoice Number", "User"]]);
   data.forEach((d, i) => {
     const row = i + 2;
-    const invoice = d.invoice.length > 6 ? d.invoice.slice(-6) : d.invoice;
+    const invoice = getInvoiceNumber(d.invoice);
     sheet.getRange(`A${row}:F${row}`).setValues([[d.amount.auth, d.amount.sett, d.amount.fee, d.amount.total, invoice, d.user]]);
   });
 
@@ -85,6 +85,12 @@ function addSheet(workbook: ExcelScript.Workbook, sheetName: string, data: Row[]
     '', '', ''
   ]);
   table.getHeaderRowRange().getFormat().autofitColumns();
+}
+
+function getInvoiceNumber(cellValue: string): string {
+  if(cellValue.length < 6) return cellValue;
+  if(cellValue.slice(-6).split('').filter(val => Number(val) !== 0).length === 2) return cellValue.slice(0,6);
+  return cellValue.slice(-6);
 }
 
 function removeCols(sheet: ExcelScript.Worksheet, reportData: Array<string | number | boolean>[]): Array<string|number|boolean>[] {
