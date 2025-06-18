@@ -72,7 +72,7 @@ function addSheet(workbook: ExcelScript.Workbook, sheetName: string, data: Row[]
   data.forEach((d, i) => {
     const row = i + 2;
     const invoice = getInvoiceNumber(d.invoice);
-    sheet.getRange(`A${row}:F${row}`).setValues([[d.amount.auth, d.amount.sett, d.amount.fee, d.amount.total, invoice, d.user]]);
+    sheet.getRange(`A${row}:F${row}`).setValues([[d.amount.auth, d.amount.sett, d.amount.fee, `=IFERROR(B${row}-C${row},B${row})`, invoice, d.user]]);
   });
 
   const range = sheet.getUsedRange();
