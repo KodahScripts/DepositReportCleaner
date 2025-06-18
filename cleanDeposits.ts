@@ -51,7 +51,7 @@ function main(workbook: ExcelScript.Workbook) {
     return new Row(row);
   });
 
-  const approvedReceipts = data.filter(d => d.state === "APPROVED");
+  const approvedReceipts = data.filter(d => d.state === "APPROVAL");
   const settledReceipts = data.filter(d => d.state === "SETTLED");
 
   const approvedAX = approvedReceipts.filter(rec => rec.brand === "AMEX");
