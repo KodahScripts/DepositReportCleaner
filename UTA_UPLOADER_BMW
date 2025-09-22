@@ -11,7 +11,8 @@ enum COLUMN {
 
 enum ACCOUNTS {
     FIXED = 3225,
-    VARIABLE = 3304
+    VARIABLE = 3304,
+    HOLD = 1000
 }
 
 interface UploadRow {
@@ -34,12 +35,12 @@ function convertDate(excelDateValue: number) {
 
 
 function getMerchantType(merchantCode: string) {
-  let obj = { code: 'H', acct: 1000 }
+  let obj = { code: 'H', acct: ACCOUNTS.HOLD }
   if(merchantCode === '00') {
-    obj = { code: 'V', acct: 3304 }
+    obj = { code: 'V', acct: ACCOUNTS.VARIABLE }
   }
   if (merchantCode === '02') {
-    obj = { code: 'F', acct: 3225 }
+    obj = { code: 'F', acct: ACCOUNTS.FIXED }
   }
   return obj
 }
